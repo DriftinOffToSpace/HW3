@@ -25,11 +25,49 @@ int main() {
 		case 1:
 			int yInt;
 			string nameString;
-			cout << "Please enter the name of the Node:  ";
+			cout << "Please enter the name of the node:  ";
 			cin >> nameString;
-			cout << "Please enter the placement of the Node:  ";
+			cout << "Please enter the placement of the node:  ";
 			cin >> yInt;
 			Graph name(yInt, nameString);
+
+		case 2:
+			int y1, y2, weight;
+			cout << "Please enter the y-value of the first node:  ";
+			cin >> y1;
+			cout << "Please enter the y-value of the second node:  ";
+			cin >> y2;
+			cout << "Please enter the weight of the edge:  ";
+			cin >> weight;
+			Graph link(y1, y2, weight);
+
+		case 3:
+			int y1, y2;
+			cout << "Please enter the y-value of the first node:  ";
+			cin >> y1;
+			cout << "Please enter the y-value of the second node:  ";
+			cin >> y2;
+			Graph deleteEdge(y1, y2);
+
+		case 4:
+			Graph dump();
+
+		case 5:
+			int y1, y2;
+			cout << "Please enter the y-value of the beginning node:  ";
+			cin >> y1;
+			cout << "Please enter the y-value of the destination node:  ";
+			cin >> y2;
+			Graph path(y1, y2);
+
+		case 6:
+			Graph dend();
+
+		case 7:
+			Graph inacess();
+
+		case 8:
+			exit(2);
 		}
 	}
 }
