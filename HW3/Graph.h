@@ -78,7 +78,7 @@ public:
 	 * Print the shortest path from s to g
 	 */
 	void path(int s, int g) {
-
+		// Variation on Dijsktra's Algorithm
 	}
 	
 	/**
