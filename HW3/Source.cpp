@@ -10,8 +10,8 @@ int main() {
 	cout << "Welcome to the Directed Graph Builder!" << endl << "WARNINGS: Work will not be saved upon exiting the program. Directed graphs may not exceed 20 nodes." << endl;
 	do {
 		cout << endl << "Please select an option from the list, inputting the number:" << endl;
-		cout << "1. Add a node to the network." << endl;
-		cout << "2. Add an edge" << endl;
+		cout << "1. Add a name to a node." << endl;
+		cout << "2. Add an edge." << endl;
 		cout << "3. Delete an edge." << endl;
 		cout << "4. Print all edges in a network." << endl;
 		cout << "5. Find the shortest path between nodes." << endl;

@@ -1,5 +1,6 @@
 #ifndef GRAPH_H
 #define GRAPH_H
+#include <iostream>
 
 #include <string>
 
@@ -10,8 +11,7 @@ struct EdgeNode {
 	int y;  // vertex NUMBER 
 	int weight; // wt of EDGE between node i and node j, and this is stored inside NODE i 
 	struct EdgeNode* next; // next NODE adjacent to y.
-	struct EdgeNode* prev; // prev NODE adjacent to y.
-} edgenode;
+};
 
 class Graph {
 
@@ -23,14 +23,13 @@ public:
 
 	Graph()
 	{
-		for (i = 0; i <= MAXV; i++)
+		/*for (int i = 0; i <= MAXV; i++)
 		{
 			edges[i].name = "";
 			edges[i].y = i;
 			edges[i].weight = -1;
 			edges[i].next = NULL;
-			edges[i].prev = NULL;
-		}
+		}*/
 	}
 
 	/**
@@ -38,23 +37,12 @@ public:
 	 */
 	~Graph() {}
 
-
-	bool exists(int i)
-	{
-		return (edges[i].weight != -1)
-	}
-
 	/**
 	 * Associates the name with node i
 	 */
 	void name(int i, string name) {
-		if (exists(i) {
-			edges[i].name = name;
-				edges[i].y = i;
-		}
-		else {
-			cout << "Error node " << i << " does not exist. " << endl;
-		}
+		/*edges[i].name = name;
+			edges[i].y = i;*/
 	}
 
 	/**
@@ -68,19 +56,37 @@ public:
 		* 3. Add i in "prev" of j
 		* 4. Add ij weight d in the adjacency list.
 		*/
-		if (exists(i) && exists(j))
-		{
-			if (edges[i].next == nullptr) {
+			/*if (edges[i].next == nullptr) {
 				edges[i].next = &edges[j];
 			}
 			else {
 				if (edges[j].prev == nullptr)
 					edges[j].prev = &edges[i];
 			}
-			edges[i].weight = d;
+			edges[i].weight = d;*/
+
+		if (edges[i] == nullptr)
+		{
+			EdgeNode* newEdge = new EdgeNode;
+			newEdge->y = j;
+			newEdge->weight = d;
+			newEdge->next = nullptr;
+			edges[i] = newEdge;
 		}
 		else {
-			cout << "Error link could not be initialized. " << endl;
+			EdgeNode* temp = edges[i];
+			while (temp->next != nullptr)
+			{
+				if (temp->y == j)
+				{
+					return;
+				}
+			}
+			EdgeNode* newEdge = new EdgeNode;
+			newEdge->y = j;
+			newEdge->weight = d;
+			newEdge->next = nullptr;
+			temp->next = newEdge;
 		}
 	}
 
@@ -93,10 +99,8 @@ public:
 		* 2. Remove node i from the "prev" of j.
 		* 2. Remove ij from the adjacency list.
 		*/
-		if (exists(i) && exists(j))
-		{
-			if (edges[i].next == &edges[j]
-		}
+		/*if (edges[i]->next == &edges[j]) {}*/
+	}
 
 
 		/**
@@ -109,6 +113,16 @@ public:
 				// Find "next" of y = i.
 				// Add any edges found to the string vector.
 			// When an exception occurs, print the adjacency list line by line.
+
+			EdgeNode* temp = new EdgeNode;
+			for (int i = 1; i < MAXV; i++) {
+				temp = edges[i];
+				while (temp != nullptr)
+				{
+					cout << "Edge i to " << temp->y << " with weight " << temp->weight << ".\n";
+					temp = temp->next;
+				}
+			}
 		}
 
 		/**
