@@ -8,7 +8,7 @@ int main() {
 
 	int selection = 0;
 	cout << "Welcome to the Directed Graph Builder!" << endl << "WARNINGS: Work will not be saved upon exiting the program. Directed graphs may not exceed 20 nodes." << endl;
-	while (selection != 8) {
+	do {
 		cout << endl << "Please select an option from the list, inputting the number:" << endl;
 		cout << "1. Add a node to the network." << endl;
 		cout << "2. Add an edge" << endl;
@@ -22,16 +22,18 @@ int main() {
 		cin >> selection;
 
 		switch (selection) {
-		case 1:
+		case 1: {
 			int yInt;
 			string nameString;
 			cout << "Please enter the name of the node:  ";
 			cin >> nameString;
 			cout << "Please enter the placement of the node:  ";
 			cin >> yInt;
-			Graph name(yInt, nameString);
+			graph.name(yInt, nameString);
+			break;
+		}
 
-		case 2:
+		case 2: {
 			int y1, y2, weight;
 			cout << "Please enter the y-value of the first node:  ";
 			cin >> y1;
@@ -39,35 +41,44 @@ int main() {
 			cin >> y2;
 			cout << "Please enter the weight of the edge:  ";
 			cin >> weight;
-			Graph link(y1, y2, weight);
+			graph.link(y1, y2, weight);
+			break;
+		}
 
-		case 3:
+		case 3: {
 			int y1, y2;
 			cout << "Please enter the y-value of the first node:  ";
 			cin >> y1;
 			cout << "Please enter the y-value of the second node:  ";
 			cin >> y2;
-			Graph deleteEdge(y1, y2);
+			graph.deleteEdge(y1, y2);
+			break;
+		}
 
-		case 4:
-			Graph dump();
+		case 4: {
+			graph.dump();
+			break;
+		}
 
-		case 5:
+		case 5: {
 			int y1, y2;
 			cout << "Please enter the y-value of the beginning node:  ";
 			cin >> y1;
 			cout << "Please enter the y-value of the destination node:  ";
 			cin >> y2;
-			Graph path(y1, y2);
+			graph.path(y1, y2);
+			break;
+		}
 
-		case 6:
-			Graph dend();
+		case 6: {
+			graph.dend();
+			break;
+		}
 
-		case 7:
-			Graph inacess();
-
-		case 8:
-			exit(2);
+		case 7: {
+			graph.inacess();
+			break;
 		}
 	}
+	} while (selection != 8);
 }
