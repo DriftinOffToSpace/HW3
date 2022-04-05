@@ -7,7 +7,7 @@
 using namespace std;
 
 struct EdgeNode {
-	string name; // name of the NODE (vertex) 
+	string name = ""; // name of the NODE (vertex) 
 	int y;  // vertex NUMBER 
 	int weight; // wt of EDGE between node i and node j, and this is stored inside NODE i 
 	struct EdgeNode* next; // next NODE adjacent to y.
@@ -40,9 +40,9 @@ public:
 	/**
 	 * Associates the name with node i
 	 */
-	void name(int i, string name) {
-		/*edges[i].name = name;
-			edges[i].y = i;*/
+	void name(int i, string nameIn) {
+		EdgeNode* temp = edges[i];
+		temp->name = nameIn;
 	}
 
 	/**
@@ -96,10 +96,15 @@ public:
 	void deleteEdge(int i, int j) {
 		/**
 		* 1. Remove node j from the "next" of i.
-		* 2. Remove node i from the "prev" of j.
 		* 2. Remove ij from the adjacency list.
 		*/
 		/*if (edges[i]->next == &edges[j]) {}*/
+
+		if (edges[i]->next == edges[j])
+		{
+			delete edges[i];
+		}
+		else (cout << "The specified edge does not exist." << endl);
 	}
 
 
@@ -119,7 +124,14 @@ public:
 				temp = edges[i];
 				while (temp != nullptr)
 				{
-					cout << "Edge i to " << temp->y << " with weight " << temp->weight << ".\n";
+					if (temp->name != "")
+					{
+						cout << "Edge " << temp->name << " to " << temp->y << " with weight " << temp->weight << ".\n";
+					}
+					else 
+					{
+						cout << "Edge " << temp->y << " to " << temp->next << " with weight " << temp->weight << ".\n";
+					}
 					temp = temp->next;
 				}
 			}
@@ -136,10 +148,29 @@ public:
 		 * Prints all the "dead end" nodes in the network. A node is a “dead end” if it has  an out-degree of zero.
 		 */
 		void dend() {
-			// Initialize int vector
-			// For nodes in the position y, incrementing by 1 each loop (in try catch block)
-				// If y has no "next" nodes, add y to the int vector
-			// When an exception occurs, print the vector separated by commas.
+			// Note: Method hangs on the print cycle. Troubleshoot soon.
+
+			EdgeNode* scanner = new EdgeNode;
+			EdgeNode* dends[MAXV + 1] = {};
+			int x = 1;
+
+			while (scanner != nullptr)
+			{
+				for (int i = 1; i < MAXV; i++)
+				{
+					scanner->y = i;
+					if (scanner->next == nullptr)
+					{
+						dends[x] = scanner;
+						x++;
+					}
+				}
+			}
+			cout << endl << "Dead-end Vectors:" << endl;
+			for (int y = 1; y < x + 1; y++)
+			{
+				cout << dends[y] << ", ";
+			}
 		}
 
 		/**
