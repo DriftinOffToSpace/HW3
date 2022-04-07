@@ -1,7 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include <iostream>
-
+#include <set>
+#include <vector>
 #include <string>
 
 using namespace std;
@@ -18,18 +19,18 @@ class Graph {
 private:
 	static const int MAXV = 20;
 	EdgeNode* edges[MAXV + 1] = {}; // edges is an array of linked lists of edges (edgenodes)
+	int numNodes;
+	vector<EdgeNode*> eVec;
+	string names[MAXV];
 
 public:
 
 	Graph()
 	{
-		/*for (int i = 0; i <= MAXV; i++)
+		for (int i = 0; i < MAXV; i++)
 		{
-			edges[i].name = "";
-			edges[i].y = i;
-			edges[i].weight = -1;
-			edges[i].next = NULL;
-		}*/
+			names[i] = to_string(i);
+		}
 	}
 
 	/**
@@ -37,33 +38,37 @@ public:
 	 */
 	~Graph() {}
 
+	void update()
+	{
+		set<int> counter;
+		EdgeNode* temp = nullptr;
+		for (int i = 0; i < eVec.size(); i++)
+		{
+			temp = eVec.at(i);
+			while (temp != nullptr)
+			{
+				counter.insert(i);
+				counter.insert(temp->y);
+				temp = temp->next;
+			}
+		}
+
+		numNodes = counter.size();
+	}
+
 	/**
 	 * Associates the name with node i
 	 */
 	void name(int i, string nameIn) {
-		EdgeNode* temp = edges[i];
-		temp->name = nameIn;
+		names[i] = nameIn;
 	}
 
 	/**
 	 * Add an edge from i to j with weight d
 	 */
 	void link(int i, int j, int d) {
-
-		/**
-		* 1. Ensure i and j exist
-		* 2. Add j in "next" of i
-		* 3. Add i in "prev" of j
-		* 4. Add ij weight d in the adjacency list.
-		*/
-			/*if (edges[i].next == nullptr) {
-				edges[i].next = &edges[j];
-			}
-			else {
-				if (edges[j].prev == nullptr)
-					edges[j].prev = &edges[i];
-			}
-			edges[i].weight = d;*/
+	// Method hangs at nested if. Diagnose.
+		// Should work fine now.
 
 		if (edges[i] == nullptr)
 		{
@@ -100,11 +105,26 @@ public:
 		*/
 		/*if (edges[i]->next == &edges[j]) {}*/
 
-		if (edges[i]->next == edges[j])
+		if (eVec.at(i)->y == j)
 		{
-			delete edges[i];
+			EdgeNode* temp = eVec.at(i)->next;
+			delete eVec.at(i);
+			eVec.at(i) = temp;
 		}
-		else (cout << "The specified edge does not exist." << endl);
+		else
+		{
+			EdgeNode* temp = eVec.at(i);
+			while (temp->next->y != j && temp->next->next != nullptr)
+			{
+				temp = temp->next;
+			}
+			if (temp->next->y == j)
+			{
+				EdgeNode* newNext = temp->next->next;
+				delete temp->next;
+				temp->next = newNext;
+			}
+		}
 	}
 
 
@@ -124,15 +144,8 @@ public:
 				temp = edges[i];
 				while (temp != nullptr)
 				{
-					if (temp->name != "")
-					{
-						cout << "Edge " << temp->name << " to " << temp->y << " with weight " << temp->weight << ".\n";
-					}
-					else 
-					{
-						cout << "Edge " << temp->y << " to " << temp->next << " with weight " << temp->weight << ".\n";
-					}
-					temp = temp->next;
+						cout << "Edge " << names[i] << " to " << temp->y << " with weight " << temp->weight << ".\n";
+						temp = temp->next;
 				}
 			}
 		}
@@ -142,6 +155,61 @@ public:
 		 */
 		void path(int s, int g) {
 			// Variation on Dijsktra's Algorithm
+			update();
+			EdgeNode* p;
+			bool intree[MAXV + 1];
+			int distance[MAXV + 1];
+			int parent[MAXV + 1];
+			int i;
+			int v;
+			int w;
+			int dist;
+			int weight = 0;
+
+			for (i = 1; i <= numNodes; i++)
+			{
+				intree[i] = false;
+				distance[i] = INT_MAX;
+				parent[i] = -1;
+			}
+
+			distance[s] = 0;
+			intree[s] = false;
+			v = s;
+
+			while (!intree[v])
+			{
+				intree[v] = true;
+				if (v != s)
+				{
+					std::cout << "Checking edge (" << s << ", " << v << ")." << std::endl;
+					weight = weight + dist;
+				}
+				p = eVec.at(v);
+
+				while (p != nullptr)
+				{
+					w = p->y;
+					if (distance[w] > (distance[v] + p->weight))
+					{
+						distance[w] = distance[v] + p->weight;
+						parent[w] = v;
+					}
+					p = p->next;
+				}
+				dist = INT_MAX;
+
+				for (int i = 1; i <= numNodes; i++)
+				{
+					if ((!intree[i]) && (dist > distance[i]))
+					{
+						dist = distance[i];
+						v = i;
+					}
+				}
+			}
+			
+			std::cout << "The shortest path from " << names[s] << " to " << names[g] << " has a weight of " << distance[g] << endl;
 		}
 
 		/**
@@ -149,41 +217,51 @@ public:
 		 */
 		void dend() {
 			// Note: Method hangs on the print cycle. Troubleshoot soon.
+			// Addressing above, should be fixed now.
 
-			EdgeNode* scanner = new EdgeNode;
-			EdgeNode* dends[MAXV + 1] = {};
-			int x = 1;
-
-			while (scanner != nullptr)
+			cout << endl << "Dead-end Nodes: " << endl;
+			for (int i = 0; i < eVec.size(); i++)
 			{
-				for (int i = 1; i < MAXV; i++)
+				if (eVec.at(i) == nullptr)
 				{
-					scanner->y = i;
-					if (scanner->next == nullptr)
-					{
-						dends[x] = scanner;
-						x++;
-					}
+					cout << names[i] << " ";
 				}
 			}
-			cout << endl << "Dead-end Vectors:" << endl;
-			for (int y = 1; y < x + 1; y++)
-			{
-				cout << dends[y] << ", ";
-			}
+			cout << endl;
 		}
 
 		/**
 		 * Prints all the "inaccessible" nodes in the network. A node is “inaccessible” if it has an in-degree of zero.
 		 */
 		void inacess() {
-			// Initialize int vector
-			// For nodes in the position y, incrementing by 1 each loop (in try catch block)
-				// If t has no "prev" nodes, add y to the int vector
-			// When an exception occurs, print the vector separated by commas.
-		}
+			cout << endl << "The following nodes are inaccessible: " << endl;
+			bool found;
+			EdgeNode* temp;
+			for (int i = 0; i < eVec.size(); i++)
+			{
+				found = false;
+				temp = nullptr;
+				for (int j = 0; j < eVec.size(); j++)
+				{
+					temp = eVec.at(j);
+					while (temp != nullptr)
+					{
+						if (temp->y == i)
+						{
+							found = true;
+						}
+						temp = temp->next;
+					}
+				}
 
+				if (!found)
+				{
+					cout << names[i] << " ";
+				}
+			}
+		}
 		// Note: you may need more instance variables (ivars) here depending on your implementation
+
 
 	};
 
